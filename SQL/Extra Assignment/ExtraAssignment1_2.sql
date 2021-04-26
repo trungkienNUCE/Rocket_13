@@ -1,7 +1,6 @@
 DROP DATABASE IF EXISTS Fresher;
 CREATE DATABASE Fresher;
 USE Fresher;
--- RENAME  fresher TO Fresher;
 
 /*===============CREATE TABLE & CONSTRAINS===============*/
 /*=======================================================*/
@@ -28,4 +27,30 @@ CREATE TABLE Trainee (
 ALTER TABLE Trainee
 ADD VTI_Account VARCHAR(50) NOT NULL UNIQUE KEY
 AFTER ET_English;
+
+-- Exercise 2: Data Types
+DROP DATABASE IF EXISTS Data_Type;
+CREATE DATABASE Data_Type;
+USE Data_Type;
+
+CREATE TABLE EX2
+(
+	ID 				MEDIUMINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `Name` 			VARCHAR(30) NOT NULL,
+    `Code` 			CHAR(5) UNIQUE NOT NULL,
+    ModifiedDate 	TIMESTAMP
+);
+
+-- Exercise 3: Data Types (2)
+CREATE TABLE EX2
+(
+	ID 				MEDIUMINT AUTO_INCREMENT PRIMARY KEY,
+    `Name` 			VARCHAR(30) NOT NULL,
+    BirthDate 		DATE NOT NULL,
+    Gender 			BIT NULL,
+    IsDeletedFlags 	BIT NOT NULL
+);
+
+
+
 
