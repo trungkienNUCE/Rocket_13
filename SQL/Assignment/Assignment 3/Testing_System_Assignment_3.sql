@@ -37,20 +37,6 @@ CREATE TABLE `Account`
     FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID),
     FOREIGN KEY (PositionID) REFERENCES `Position`(PositionID)
 );
-CREATE TABLE `Account`
-(
-	AccountID 		TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    Email 			VARCHAR(50) NOT NULL UNIQUE KEY,
-    Username 		VARCHAR(50) NOT NULL UNIQUE KEY,
-    Fullname 		NVARCHAR(50) NOT NULL,
-    DepartmentID 	TINYINT UNSIGNED NOT NULL,
-    PositionID 		TINYINT UNSIGNED NOT NULL,
-    CreateDate 		DATETIME DEFAULT NOW(),
-    CONSTRAINT fk_account_departments FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID),
-    CONSTRAINT fk_account_Position  FOREIGN KEY (PositionID) REFERENCES `Position`(PositionID)
-);
-
-
 
 -- DROP TABLE Group
 DROP TABLE IF EXISTS `Group`;
@@ -64,11 +50,11 @@ CREATE TABLE `Group`
     FOREIGN KEY (CreatorID) REFERENCES  `Account`(AccountID)
 );
 
-ALTER TABLE `Group`
-ADD FOREIGN KEY(CreatorID) REFERENCES  `Account`(AccountID) ;
+-- ALTER TABLE `Group`
+-- ADD FOREIGN KEY(CreatorID) REFERENCES  `Account`(AccountID) ;
 
-ALTER TABLE `Group`
-DROP FOREIGN KEY group_ibfk_1;
+-- ALTER TABLE `Group`
+-- DROP FOREIGN KEY group_ibfk_1;
 
 -- DROP TABLE GroupAccount
 DROP TABLE IF EXISTS GroupAccount;
