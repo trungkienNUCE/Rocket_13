@@ -1,11 +1,9 @@
-DROP DATABASE IF EXISTS Fresher;
-CREATE DATABASE Fresher;
-USE Fresher;
-
 /*===============CREATE TABLE & CONSTRAINS===============*/
 /*=======================================================*/
 -- Q1: 
-
+DROP DATABASE IF EXISTS Fresher;
+CREATE DATABASE Fresher;
+USE Fresher;
 -- DROP TABLE Trainee;
 DROP TABLE IF EXISTS Trainee;
 -- CREATE TABLE Trainee
@@ -42,7 +40,7 @@ CREATE TABLE EX2
 );
 
 -- Exercise 3: Data Types (2)
-CREATE TABLE EX2
+CREATE TABLE EX3
 (
 	ID 				MEDIUMINT AUTO_INCREMENT PRIMARY KEY,
     `Name` 			VARCHAR(30) NOT NULL,
