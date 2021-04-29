@@ -218,7 +218,7 @@ VALUES
 -- add data Question
 INSERT INTO Question(Content,CategoryID,TypeID,CreatorID,CreateDate)
 VALUES
-		(N'Java học có khó không?','1','2','3','2020-05-04'),
+		(N'Tôi muốn học giỏi thì làm sao?','1','2','3','2020-05-04'),
         (N'Java web trong bao lâu?','2','1','2','2020-05-04'),
 		(N'PHP có thật sự dễ học?','3','1','1','2020-05-04'),
 		(N'Python lương bao nhiêu?','4','2','4','2020-05-04');
@@ -244,8 +244,7 @@ VALUES
 						('1','2'),
 						('3','1'),
 						('3','2');
-
-
+                        
 /*===============Testing_System_Assignment_3===============*/
 /*=========================================================*/
 
@@ -261,21 +260,27 @@ SELECT * FROM `Account`
 WHERE LENGTH(Fullname) = (SELECT MAX(LENGTH(Fullname)) FROM `Account`);
 
 -- Q5 Lấy ra thông tin account có full name dài nhất và thuộc phòng ban có id = 3 ???
-SELECT * FROM `Account`
-WHERE LENGTH(Fullname) = (SELECT MAX(LENGTH(Fullname)) FROM `Account`) AND DepartmentID = 2;
+SELECT  * FROM `Account`
+WHERE DepartmentID = 3 
+AND LENGTH(FullName) = (SELECT MAX(length(FullName)) 
+                        FROM Account 
+                        WHERE DepartmentID = 3 );
+
+-- CACH 2 DUNG CTE
+WITH CTE_DEP3 AS  (SELECT * FROM `Account` WHERE DepartmentID = 3)
+SELECT MAX(length(FullName)) FROM Account 
+WHERE LENGTH(FULLNAME) = MAX(LENGTH(FULLNAME));
         
+
 -- Q6 Lấy ra tên group đã tham gia trước ngày 20/12/2019
 SELECT GroupName, CreateDate FROM `Group`
 WHERE CreateDate < '2019-12-20'
 ORDER BY CreateDate ASC;
 
 -- Q7 Lấy ra ID của question có >= 4 câu trả lời
-SELECT 
-    QuestionID
-FROM
-    Answer
-GROUP BY QuestionID
-HAVING COUNT(QuestionID) >= 4;
+SELECT A.QuestionID FROM Answer A
+GROUP BY A.QuestionID
+HAVING COUNT(A.QuestionID) >= 2;
 
 -- Q8 Lấy ra các mã đề thi có thời gian thi >= 60 phút và được tạo trước ngày 20/12/2019
 SELECT `code` AS 'Mã đề' FROM Exam 
@@ -287,17 +292,16 @@ ORDER BY CreateDate DESC
 LIMIT 5;
 
 -- Q10 Đếm số nhân viên thuộc department có id = 2
-SELECT COUNT(AccountID) AS 'Number of account have depID is 2' FROM `account` 
+SELECT COUNT(AccountID) AS 'SL NV CO DEPT_ID = 2' FROM `account` 
 WHERE departmentID = 2;
     
--- Q11 Lấy ra nhân viên có tên bắt đầu bằng chữ "N" và kết thúc bằng chữ "A" => NGUYEN VAN AN
-SELECT  * FROM `account` 
-WHERE Fullname LIKE 'N%' AND Fullname LIKE '%A';
+-- Q11 Lấy ra nhân viên có tên bắt đầu bằng chữ "" và kết thúc bằng chữ "C" => ĐÀO BÁ LỘC
+SELECT * FROM `account` 
+WHERE substring_index(FULLNAME, ' ', -1) LIKE 'L%C';
     
 -- Q12 Xoá tất cả các exam được tạo trước ngày 20/12/2019
 DELETE FROM exam 
-WHERE
-    CreateDate < '2019-12-20';
+WHERE CreateDate < '2019-12-20';
     
 -- Q13 Xóa tất cả các question có nội dung bắt đầu bằng từ "JAVA"
 DELETE FROM question
