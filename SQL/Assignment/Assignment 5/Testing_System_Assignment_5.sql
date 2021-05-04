@@ -47,8 +47,19 @@
     HAVING SL = (SELECT * FROM CTE_GETMAX);
 
 -- Question 3: Tạo view có chứa câu hỏi có những content quá dài (content quá 300 từ được coi là quá dài) và xóa nó đi
+/* Tao View*/
+	CREATE OR REPLACE VIEW v_content_qua_dai AS
+	SELECT CONTENT,length(CONTENT) AS 'DO DAI'  
+    FROM question
+	WHERE (length(CONTENT) > 35);
+	
+    SELECT * FROM v_content_qua_dai;
 
-
+/* Tao CTE */
+	WITH CTE_CONTENT AS (SELECT CONTENT,length(CONTENT) AS 'DO DAI'  
+    FROM question
+	WHERE (length(CONTENT) > 35))
+    SELECT * FROM CTE_CONTENT;
 
 -- Question 4: Tạo view có chứa danh sách các phòng ban có nhiều nhân viên nhất
 /* Tao View*/	
@@ -76,9 +87,19 @@
 	HAVING SL = (SELECT * FROM CTE_GETMAX);
 
 -- Question 5: Tạo view có chứa tất các các câu hỏi do user họ Nguyễn tạo
-	
+/* Tao View*/	
+	CREATE OR REPLACE VIEW v_ques_by_Nguyen AS
+	SELECT q.questionID, q.content, A.FULLNAME FROM QUESTION Q
+	JOIN `ACCOUNT` A ON A.accountID = Q.CREATORID
+	HAVING substring_index(FULLNAME,' ',1) = 'Tran';
 
+	SELECT * FROM v_ques_by_Nguyen;
 
-
+/* Tao CTE */
+	WITH CTE_QUES_BY_NGUYEN AS 
+		(SELECT q.questionID, q.content, A.FULLNAME FROM QUESTION Q
+		JOIN `ACCOUNT` A ON A.accountID = Q.CREATORID
+		HAVING substring_index(FULLNAME,' ',1) = 'Tran')
+    SELECT * FROM CTE_QUES_BY_NGUYEN;
 
 
