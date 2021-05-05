@@ -4,7 +4,7 @@ USE Fresher;
 INSERT INTO Trainee (Full_Name			, Birth_Date	, Gender, ET_IQ	, ET_Gmath	, ET_English	,	VTI_Account, Training_Class	, Evaluation_Notes) 
 VALUES
 					('Tran Trung Kien'	,'1999-08-09'	,'M'	,'20'	,'20'		,'50'			,	'kien'		,'Rocket13'		,'Oke'			),
-                    ('Nguyen Van A'		,'2000-12-09'	,'M'	,'10'	,'20'		,'45'			,	'A'		,'Rocket14'		,'No notes'		),
+                    ('Nguyen Van A'		,'2000-12-09'	,'M'	,'10'	,'20'		,'45'			,	'A'			,'Rocket14'		,'No notes'		),
                     ('Hoang Tien Viet'	,'1998-08-1'	,'M'	,'13'	,'1'		,'12'			,	'Viet'		,'Rocket11'		,'No notes'		),
                     ('Pham Hoai Nam'	,'1999-11-09'	,'M'	,'10'	,'2'		,'21'			,	'Nam'		,'Rocket09'		,'Perfect'		),
                     ('Nguyen Viet Khoi'	,'1999-09-09'	,'M'	,'13'	,'12'		,'43'			,	'Khoi'		,'Rocket14'		,'No notes'		),
