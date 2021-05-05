@@ -197,3 +197,5 @@
 	GROUP BY	ga.groupID
 	HAVING 		SL_Nhan_Vien < 7
     ORDER BY 	GroupID;
+    
+    
