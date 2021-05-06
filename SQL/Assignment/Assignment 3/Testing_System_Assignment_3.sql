@@ -13,6 +13,9 @@ CREATE TABLE Department
     DepartmentName 	NVARCHAR(30) NOT NULL UNIQUE KEY
 );
 
+-- ALTER TABLE Department
+-- CHANGE COLUMN DepartmentName DepartmentName NVARCHAR(30) NOT NULL UNIQUE KEY;
+
 -- DROP TABLE Position
 DROP TABLE IF EXISTS Position;
 -- CREATE TABLE Position
@@ -37,6 +40,14 @@ CREATE TABLE `Account`
     FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID),
     FOREIGN KEY (PositionID) REFERENCES `Position`(PositionID)
 );
+-- ALTER TABLE `Account`
+-- CHANGE COLUMN DepartmentID DepartmentID TINYINT UNSIGNED NOT NULL DEFAULT '8';
+
+-- ALTER TABLE `account`
+-- DROP FOREIGN KEY account_ibfk_1;
+-- ALTER TABLE `account`
+-- ADD FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID) ON DELETE SET DEFAULT;
+
 
 -- DROP TABLE Group
 DROP TABLE IF EXISTS `Group`;
@@ -130,6 +141,7 @@ CREATE TABLE Exam
     FOREIGN KEY (CreatorID) REFERENCES `Account`(AccountID)
 );
 
+
 -- DROP TABLE ExamQuestion
 DROP TABLE IF EXISTS ExamQuestion;
 -- CREATE TABLE ExamQuestion
@@ -141,6 +153,11 @@ CREATE TABLE ExamQuestion
     FOREIGN KEY (QuestionID) REFERENCES Question(QuestionID),
     FOREIGN KEY (ExamID) REFERENCES Exam(ExamID)
 );
+-- ALTER TABLE examquestion
+-- ADD FOREIGN KEY (QuestionID) REFERENCES Question(QuestionID) ON DELETE CASCADE;
+
+-- ALTER TABLE examquestion
+-- DROP FOREIGN KEY `examquestion_ibfk_1`;
 
 
 /*===============INSERT VALUES===============*/
@@ -241,9 +258,9 @@ VALUES
 -- add data ExamQuestion
 INSERT INTO ExamQuestion(ExamID,QuestionID)
 VALUES
-						('1','2'),
-						('3','1'),
-						('3','2');
+						('6','3'),
+						('4','2'),
+						('5','3');
                         
 /*===============Testing_System_Assignment_3===============*/
 /*=========================================================*/
