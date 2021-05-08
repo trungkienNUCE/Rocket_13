@@ -157,15 +157,45 @@
 
 	CALL sp_name_of_group_or_username('te',1);
 
+
+-- CACH 2
+	DROP PROCEDURE IF EXISTS sp_name_of_group_or_username02;
+	DELIMITER $$
+	CREATE PROCEDURE sp_name_of_group_or_username02(IN in_string_input VARCHAR(50))
+	BEGIN
+			SELECT	g.GroupName AS `Name`
+			FROM	`group` g
+			WHERE	GroupName LIKE concat_ws('%',in_string_input,'%')
+            UNION
+			SELECT	a.Username
+			FROM	`account` a
+			WHERE	Username LIKE concat_ws('%',in_string_input,'%');
+	END$$
+	DELIMITER ;
+
+	CALL sp_name_of_group_or_username02('trung');
+
 -- Question 7: Viết 1 store cho phép người dùng nhập vào thông tin fullName, email và
 -- trong store sẽ tự động gán:
 -- username sẽ giống email nhưng bỏ phần @..mail đi
 -- positionID: sẽ có default là developer
 -- departmentID: sẽ được cho vào 1 phòng chờ
 -- Sau đó in ra kết quả tạo thành công
-
-
-
+	DELIMITER $$
+	DROP PROCEDURE IF EXISTS sp_insert_fullname_email;
+	CREATE PROCEDURE sp_insert_fullname_email(IN in_fullname VARCHAR(50), IN in_email VARCHAR(50))
+	BEGIN
+		DECLARE v_username VARCHAR(50)  DEFAULT SUBSTRING_INDEX(in_email,'@',1);
+        DECLARE v_dept_id TINYINT DEFAULT  8;
+        DECLARE v_postion_id TINYINT DEFAULT  1;
+        DECLARE v_CreateDate DATETIME DEFAULT   now();
+        
+        INSERT INTO `account`(Email,Username,Fullname,departmentid, positionid,createdate)
+        VALUE 				(in_email,v_username,in_fullname,v_dept_id,v_postion_id,v_CreateDate);
+	END$$
+	DELIMITER ;
+    
+	CALL sp_insert_fullname_email('Nguyen Duc Huong','nguyenduchuong3@gmail.com');
 
 -- Question 8: Viết 1 store cho phép người dùng nhập vào Essay hoặc Multiple-Choice
 -- để thống kê câu hỏi essay hoặc multiple-choice nào có content dài nhất
@@ -226,17 +256,17 @@
 	CREATE PROCEDURE sp_del_departmentname(IN in_deptName NVARCHAR(50))
 		BEGIN
 			UPDATE 	`Account`
-			SET		DepartmentID = 8
-			WHERE	DepartmentID = (SELECT 	DepartmentID	
-									FROM	Department
-									WHERE 	DepartmentName = in_deptName);
+				SET		DepartmentID = 8
+				WHERE	DepartmentID = (SELECT 	DepartmentID	
+										FROM	Department
+										WHERE 	DepartmentName = in_deptName);
 			DELETE 
 			FROM	Department
 			WHERE	DepartmentName = in_deptName;
 		END$$
 	DELIMITER ;
 
-	CALL sp_del_departmentname('meeting');
+	CALL sp_del_departmentname('ky thuat');
 
 
 
