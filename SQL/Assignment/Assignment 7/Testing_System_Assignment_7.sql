@@ -165,6 +165,7 @@ VALUES
 
 
 
+
 -- Question 8: Viết trigger sửa lại dữ liệu cho đúng:
 -- Nếu người dùng nhập vào gender của account là nam, nữ, chưa xác định
 -- Thì sẽ đổi lại thành M, F, U cho giống với cấu hình ở database
@@ -215,9 +216,50 @@ VALUES
 
 -- Question 10: Viết trigger chỉ cho phép người dùng chỉ được update, delete các
 -- question khi question đó chưa nằm trong exam nào
+	
+    DROP TRIGGER IF EXISTS trig_bf_update_ques;
+	DELIMITER $$
+	CREATE TRIGGER trig_bf_update_ques
+    BEFORE UPDATE ON  question 
+    FOR EACH ROW
+		BEGIN
+			IF OLD.questionID IN (SELECT DISTINCT QuestionID FROM testingsystem.answer)
+            OR
+			OLD.questionID IN (SELECT DISTINCT QuestionID FROM testingsystem.examquestion) THEN
+            SIGNAL SQLSTATE '12345'
+			SET MESSAGE_TEXT = "CAN'T UPDATE question in answer or examquestion";
+            END IF;
+		END $$
+	DELIMITER ;
+    
+    
+	DROP TRIGGER IF EXISTS trig_bf_del_ques;
+	DELIMITER $$
+	CREATE TRIGGER trig_bf_del_ques
+    BEFORE DELETE ON  question 
+    FOR EACH ROW
+		BEGIN
+			IF OLD.questionID IN (SELECT DISTINCT QuestionID FROM testingsystem.answer)
+            OR
+			OLD.questionID IN (SELECT DISTINCT QuestionID FROM testingsystem.examquestion) THEN
+            SIGNAL SQLSTATE '12345'
+			SET MESSAGE_TEXT = "CAN'T DELETE question in answer or examquestion";
+            END IF;
+		END $$
+	DELIMITER ;
+    
+-- UPDATE table_name
+-- SET column1 = value1, column2 = value2, ...
+-- WHERE condition;
 
-
-
+	UPDATE question
+    SET content = 'SQL la gi?' WHERE questionID = '2';
+    
+-- DELETE FROM table_name WHERE condition;
+    DELETE FROM question WHERE QuestionID = '2';
+    
+    SELECT * FROM testingsystem.question;
+    
 -- Question 12: Lấy ra thông tin exam trong đó:
 -- Duration <= 30 thì sẽ đổi thành giá trị "Short time"
 -- 30 < Duration <= 60 thì sẽ đổi thành giá trị "Medium time"
