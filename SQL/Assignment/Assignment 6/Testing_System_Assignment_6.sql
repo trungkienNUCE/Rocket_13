@@ -271,18 +271,6 @@
 
 
 -- Question 12: Viết store để in ra mỗi tháng có bao nhiêu câu hỏi được tạo trong năm nay
-	DROP PROCEDURE IF EXISTS sp_count_question_in_Month;
-	DELIMITER $$
-	CREATE PROCEDURE sp_count_question_in_Month(IN in_Month TINYINT UNSIGNED)
-		BEGIN
-			SELECT in_Month AS 'Thang', COUNT(QuestionID) AS Sl FROM question
-			WHERE month(createdate) = in_Month AND YEAR(NOW()) = YEAR(CreateDate);
-		END$$
-	DELIMITER ;
-
-	CALL sp_count_question_in_Month(5);
-
--- IS CORRECT
 	DROP PROCEDURE IF EXISTS sp_CountQuesInMonth;
 	DELIMITER $$
 	CREATE PROCEDURE sp_CountQuesInMonth()
@@ -303,7 +291,8 @@
 				 UNION SELECT 11 AS MONTH
 				 UNION SELECT 12 AS MONTH
 			) AS EachMonthInYear
-			LEFT JOIN Question ON EachMonthInYear.MONTH = MONTH(CreateDate) AND YEAR(NOW()) = YEAR(CreateDate)
+			LEFT JOIN Question ON EachMonthInYear.MONTH = MONTH(CreateDate) 
+            AND YEAR(NOW()) = YEAR(CreateDate)
 			GROUP BY EachMonthInYear.MONTH
 			ORDER BY EachMonthInYear.MONTH ASC;
 	END$$
@@ -312,8 +301,35 @@
 	CALL sp_CountQuesInMonth();
     
     
+	DROP PROCEDURE IF EXISTS sp_CountQuesInMonth02;
+	DELIMITER $$
+	CREATE PROCEDURE sp_CountQuesInMonth02()
+	BEGIN
+		WITH CTE_12Months AS (
+				 SELECT 1 AS MONTH
+				 UNION SELECT 2 AS MONTH
+				 UNION SELECT 3 AS MONTH
+				 UNION SELECT 4 AS MONTH
+				 UNION SELECT 5 AS MONTH
+				 UNION SELECT 6 AS MONTH
+				 UNION SELECT 7 AS MONTH
+				 UNION SELECT 8 AS MONTH
+				 UNION SELECT 9 AS MONTH
+				 UNION SELECT 10 AS MONTH
+				 UNION SELECT 11 AS MONTH
+				 UNION SELECT 12 AS MONTH
+	)	
+	SELECT M.MONTH, count(month(Q.CreateDate)) AS SL  FROM CTE_12Months M
+	LEFT JOIN (SELECT * FROM question Q1 WHERE year(Q1.CreateDate) = year(now()) )  Q ON M.MONTH = month(Q.CreateDate) 
+	GROUP BY M.MONTH;
+	END$$
+	DELIMITER ;
+
+	Call sp_CountQuesInMonth02();
+    
 -- Question 13: Viết store để in ra mỗi tháng có bao nhiêu câu hỏi được tạo trong 6
 -- tháng gần đây nhất (Nếu tháng nào không có thì sẽ in ra là "không có câu hỏi nào trong tháng")
+	
 
 
 

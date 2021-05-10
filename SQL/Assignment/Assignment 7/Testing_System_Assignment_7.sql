@@ -260,7 +260,6 @@ VALUES
 		END $$
 	DELIMITER ;
     
-    
 	DROP TRIGGER IF EXISTS trig_bf_del_ques;
 	DELIMITER $$
 	CREATE TRIGGER trig_bf_del_ques
@@ -293,13 +292,13 @@ VALUES
 -- 30 < Duration <= 60 thì sẽ đổi thành giá trị "Medium time"
 -- Duration > 60 thì sẽ đổi thành giá trị "Long time"
 
-	SELECT *,
+	SELECT ExamID,code,Duration,
 		CASE
 		WHEN Duration <=30 THEN 'Short time'
 		WHEN Duration BETWEEN 30 AND 60 THEN 'Medium time'
 		WHEN Duration >60 THEN 'Long time'
 		END AS 'Time'
-	FROM testingsystem.exam;
+	FROM Exam;
 
 -- Question 13: Thống kê số account trong mỗi group và in ra thêm 1 column nữa có tên
 -- là the_number_user_amount và mang giá trị được quy định như sau:
@@ -310,8 +309,8 @@ VALUES
     SELECT GroupID,Count(AccountID),
 		CASE
         WHEN Count(AccountID) <= 4 THEN 'Few'
-        WHEN Count(AccountID) BETWEEN 5 AND 20 THEN 'normal'
-        WHEN Count(AccountID) > 20 THEN 'higher'
+        WHEN Count(AccountID) <=20 THEN 'normal'
+        ELSE 'higher'
 		END AS 'the_number_user_amount'
     FROM groupaccount
 	GROUP BY GroupID;
@@ -323,11 +322,7 @@ VALUES
 		CASE
 			WHEN COUNT(a.AccountID) = 0 THEN 'Khong co User'
             ELSE COUNT(a.AccountID)
-		END AS Number_of_Account
+		END AS Number_of_user
 	FROM Department d
 	LEFT JOIN `Account` a ON d.DepartmentID = a.DepartmentID
 	GROUP BY d.DepartmentID;
-
-
-
-
