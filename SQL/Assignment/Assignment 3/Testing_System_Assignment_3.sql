@@ -197,7 +197,7 @@ VALUES
 -- add data `Group`
 INSERT INTO `Group`(GroupName,CreatorID,CreateDate)
 VALUES 
-					(N'Tester',1,'2019-09-12'),
+					(N'Meeting',1,'2019-09-12');
 					(N'Development',1,'2019-09-08'),
 					(N'Technology',2,'2019-09-12'),
 					(N'technology02',2,'2021-01-12'),

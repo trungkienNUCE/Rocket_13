@@ -18,8 +18,8 @@
 	END$$
 	DELIMITER ;
 
-	INSERT INTO `Group`(GroupName, CreatorID, CreateDate)
-	VALUES (N'Sale07','1', '2011-04-12');
+	INSERT INTO `Group`	(GroupName, CreatorID 	, CreateDate  )
+	VALUES 				(N'Sale07', '1'			, '2011-04-12');
 
 -- Question 2: Tạo trigger Không cho phép người dùng thêm bất kỳ user nào vào
 -- department "Sale" nữa, khi thêm thì hiện ra thông báo "Department Sale cannot add more user"
@@ -30,7 +30,10 @@
     BEFORE INSERT ON  `account` 
     FOR EACH ROW
 	BEGIN
-        IF  NEW.DepartmentID = 11 THEN
+		DECLARE v_deptID TINYINT;
+        SELECT d.DepartmentID INTO v_deptID FROM department d WHERE d.DepartmentName = 'Sale';
+    
+        IF  NEW.DepartmentID = v_deptID THEN
 			SIGNAL SQLSTATE '12345'
 			SET MESSAGE_TEXT = 'Department Sale cannot add more user';
 		END IF;
@@ -52,8 +55,7 @@ VALUES
 	BEGIN
 		DECLARE v_count_acc TINYINT UNSIGNED;
         SELECT  count(AccountID) INTO v_count_acc FROM testingsystem.groupaccount
-		where GroupID = NEW.groupID 
-		GROUP BY GroupID;
+		where GroupID = NEW.groupID ;
         IF  v_count_acc >= 5 THEN
 			SIGNAL SQLSTATE '12345'
 			SET MESSAGE_TEXT = 'A group have max 5 users';
@@ -61,9 +63,9 @@ VALUES
 	END$$
 	DELIMITER ;
 
-	INSERT INTO GroupAccount(GroupID,AccountID,JoinDate)
+	INSERT INTO GroupAccount(GroupID,AccountID 	,JoinDate		)
 	VALUES 
-						('2','10','2020-09-12');
+							('2'	,'10'		,'2020-09-12'	);
 
 -- Question 4: Cấu hình 1 bài thi có nhiều nhất là 10 Question
 
@@ -75,8 +77,7 @@ VALUES
 	BEGIN
 		DECLARE v_count_ques TINYINT UNSIGNED;
         SELECT count(QuestionID) INTO v_count_ques FROM testingsystem.examquestion
-		WHERE ExamID = NEW.ExamID
-		GROUP BY ExamID;
+		WHERE ExamID = NEW.ExamID;
         IF  v_count_ques >= 3 THEN
 			SIGNAL SQLSTATE '12345'
 			SET MESSAGE_TEXT = 'A exam have max 3 questions';
@@ -84,9 +85,9 @@ VALUES
 	END$$
 	DELIMITER ;
 
-	INSERT INTO ExamQuestion(ExamID,QuestionID)
+	INSERT INTO ExamQuestion(ExamID	,QuestionID)
 	VALUES
-						('6','4');
+							('6'	,'4'		);
 
 -- Question 5: Tạo trigger không cho phép người dùng xóa tài khoản có email là
 -- admin@gmail.com (đây là tài khoản admin, không cho phép user xóa),
@@ -142,22 +143,26 @@ VALUES
 
 	ALTER TABLE testingsystem.account
     CHANGE COLUMN departmentID departmentID TINYINT UNSIGNED;
-
-	DROP TRIGGER IF EXISTS trig_bf_insert_acc_not_deptID;
+	
+    DROP TRIGGER IF EXISTS trig_bf_insert_acc_not_deptID;
 	DELIMITER $$
 	CREATE TRIGGER trig_bf_insert_acc_not_deptID
     BEFORE INSERT ON  `account` 
     FOR EACH ROW
 	BEGIN
+		DECLARE v_deptID TINYINT;
+        SELECT departmentID INTO v_deptID FROM department WHERE departmentname = 'Phong cho';
+        
         IF  NEW.departmentID IS NULL THEN
-			SET NEW.departmentID = '8';
+			SET NEW.departmentID = v_deptID;
 		END IF;
 	END$$
 	DELIMITER ;
 	
-INSERT INTO `Account`(Email								, Username			, Fullname				, PositionID, CreateDate)
-VALUES		
-					(N'luongxuanhieu2@gmail.com'			,'luonghieu02'		,'Luong Xuan Hieu'		,'3'	,'2021-01-02');
+    
+	INSERT INTO `Account`(Email								, Username			, Fullname				, PositionID, CreateDate)
+	VALUES		
+						(N'phamthienduy@gmail.com'			,'thienduy'			,'Pham Thien Duy'		,'3'		,'2021-01-02');
 
 
 -- Question 7: Cấu hình 1 bài thi chỉ cho phép user tạo tối đa 4 answers cho mỗi
@@ -212,8 +217,8 @@ VALUES
 		END $$
 	DELIMITER ;
 
-INSERT INTO `Account`(Email								, Username			, Fullname				, PositionID, CreateDate, Gender)
-VALUES		
+	INSERT INTO `Account`(Email								, Username			, Fullname				, PositionID, CreateDate, Gender)
+	VALUES		
 					(N'luongxuanhieu3@gmail.com'			,'luonghieu03'		,'Luong Xuan Hieu'		,'3'	,'2021-01-02', 'Nam');
 
 -- Question 9: Viết trigger không cho phép người dùng xóa bài thi mới tạo được 2 ngày
