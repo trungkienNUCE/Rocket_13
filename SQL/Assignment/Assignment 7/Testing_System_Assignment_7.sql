@@ -162,9 +162,31 @@ VALUES
 -- Question 7: Cấu hình 1 bài thi chỉ cho phép user tạo tối đa 4 answers cho mỗi
 -- question, trong đó có tối đa 2 đáp án đúng.
 
+	DROP TRIGGER IF EXISTS trig_bf_insert_answer;
+	DELIMITER $$
+	CREATE TRIGGER trig_bf_insert_answer
+    BEFORE INSERT ON  answer
+    FOR EACH ROW
+	BEGIN
+		DECLARE v_number_answers TINYINT UNSIGNED;
+        DECLARE v_number_answers_correct TINYINT UNSIGNED;
+        
+        SELECT count(answerID) INTO v_number_answers FROM answer
+        WHERE QuestionID = NEW.QuestionID;
+        
+        SELECT count(answerID) INTO v_number_answers_correct FROM answer
+        WHERE QuestionID = NEW.QuestionID AND isCorrect = 1;
+        
+        IF v_number_answers = 4 OR v_number_answers_correct = 2 THEN
+			SIGNAL SQLSTATE '12345'
+			SET MESSAGE_TEXT = "CAN'T INSERT answer";
+		END IF;
+	END$$
+	DELIMITER ;
 
-
-
+	INSERT INTO Answer(Content,QuestionID,isCorrect)
+	VALUES 
+		(N'SQL la he quan tri CSDL','2',0);
 
 -- Question 8: Viết trigger sửa lại dữ liệu cho đúng:
 -- Nếu người dùng nhập vào gender của account là nam, nữ, chưa xác định
@@ -291,14 +313,14 @@ VALUES
 -- Question 14: Thống kê số mỗi phòng ban có bao nhiêu user, nếu phòng ban nào
 -- không có user thì sẽ thay đổi giá trị 0 thành "Không có User"
     
-    SELECT d.DepartmentName,
+    SELECT d.departmentID,d.DepartmentName,
 		CASE
 			WHEN COUNT(a.AccountID) = 0 THEN 'Khong co User'
             ELSE COUNT(a.AccountID)
 		END AS Number_of_Account
 	FROM Department d
 	LEFT JOIN `Account` a ON d.DepartmentID = a.DepartmentID
-	GROUP BY d.DepartmentName;
+	GROUP BY d.DepartmentID;
 
 
 
