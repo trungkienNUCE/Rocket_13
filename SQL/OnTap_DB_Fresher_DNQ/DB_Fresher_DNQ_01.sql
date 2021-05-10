@@ -67,7 +67,7 @@ CREATE TABLE `trainee` (
 
 -- Question 8: Viết lệnh để lấy ra Fullname của các thực tập sinh trong lớp, lọc bỏ các tên trùng nhau.
 	
-    SELECT DISTINCT Full_name FROM trainee;
+    SELECT DISTINCT Full_name, training_class FROM trainee ORDER BY training_class;
 
 -- Question 9: Viết lệnh để lấy ra Fullname của các thực tập sinh trong lớp, sắp xếp các tên này theo thứ tự từ A-Z.
 
@@ -88,7 +88,7 @@ CREATE TABLE `trainee` (
 
 	SELECT substring_index(Full_name,' ',-1) AS 'Ten', ET_IQ, ET_Gmath, ET_English FROM trainee
     WHERE length(Full_name) = (SELECT MAX(length(Full_name)) FROM trainee);
-
+    
 -- Question 13 Lấy ra 5 thực tập sinh có tuổi nhỏ nhất
 	
 	SELECT *, Year(now()) - Year(Birth_Date)  AS 'Tuoi' FROM trainee
