@@ -276,13 +276,45 @@
 	CREATE PROCEDURE sp_count_question_in_Month(IN in_Month TINYINT UNSIGNED)
 		BEGIN
 			SELECT in_Month AS 'Thang', COUNT(QuestionID) AS Sl FROM question
-			WHERE month(createdate) = in_Month;
+			WHERE month(createdate) = in_Month AND YEAR(NOW()) = YEAR(CreateDate);
 		END$$
 	DELIMITER ;
 
 	CALL sp_count_question_in_Month(5);
 
+-- IS CORRECT
+	DROP PROCEDURE IF EXISTS sp_CountQuesInMonth;
+	DELIMITER $$
+	CREATE PROCEDURE sp_CountQuesInMonth()
+	BEGIN
+			SELECT EachMonthInYear.MONTH, COUNT(QuestionID) AS COUNT
+			FROM
+			(
+				 SELECT 1 AS MONTH
+				 UNION SELECT 2 AS MONTH
+				 UNION SELECT 3 AS MONTH
+				 UNION SELECT 4 AS MONTH
+				 UNION SELECT 5 AS MONTH
+				 UNION SELECT 6 AS MONTH
+				 UNION SELECT 7 AS MONTH
+				 UNION SELECT 8 AS MONTH
+				 UNION SELECT 9 AS MONTH
+				 UNION SELECT 10 AS MONTH
+				 UNION SELECT 11 AS MONTH
+				 UNION SELECT 12 AS MONTH
+			) AS EachMonthInYear
+			LEFT JOIN Question ON EachMonthInYear.MONTH = MONTH(CreateDate) AND YEAR(NOW()) = YEAR(CreateDate)
+			GROUP BY EachMonthInYear.MONTH
+			ORDER BY EachMonthInYear.MONTH ASC;
+	END$$
+	DELIMITER ;
+
+	CALL sp_CountQuesInMonth();
+    
+    
 -- Question 13: Viết store để in ra mỗi tháng có bao nhiêu câu hỏi được tạo trong 6
 -- tháng gần đây nhất (Nếu tháng nào không có thì sẽ in ra là "không có câu hỏi nào trong tháng")
+
+
 
 

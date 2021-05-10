@@ -3,6 +3,7 @@
 	USE TestingSystem;
     
 -- Question 1: Tạo trigger không cho phép người dùng nhập vào Group có ngày tạo trước 1 năm trước
+/* -- Hàm DATE_SUB trả về một ngày mà sau đó một khoảng thời gian/ngày nhất định đã bị trừ */
 
 	DROP TRIGGER IF EXISTS trig_bf_insert_group;
 	DELIMITER $$
