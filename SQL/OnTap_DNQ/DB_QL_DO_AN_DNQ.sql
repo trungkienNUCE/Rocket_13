@@ -108,12 +108,6 @@ VALUES
 	SELECT d.ten_detai AS 'Ten de tai', count(1) AS 'SL' FROM ql_doan.huongdan h
 	JOIN detai d ON d.ID_DeTai = h.ID_DeTai
 	where h.id_detai = 2;
-	
-    /* CACH 2 */
-	SELECT D.ten_detai, COUNT(1) AS 'SL' from huongdan H
-    join sinhvien S on S.id_sv = H.id_sv
-    join detai D on D.id_detai = H.id_detai
-    WHERE H.ID_DeTai = 2;
     
 -- 3. Tạo view có tên là "SinhVienInfo" lấy các thông tin về học sinh bao gồm:
 -- mã số, họ tên và tên đề tài
