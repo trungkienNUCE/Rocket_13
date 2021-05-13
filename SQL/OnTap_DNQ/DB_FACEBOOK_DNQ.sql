@@ -1,3 +1,15 @@
+-- Xây dựng DB Facebook Management.
+-- Facebook đang là 1 công ty đa quốc gia với nhiều trụ sở và nhân viên trên toàn thế giới, bạn
+-- hãy xây dựng 1 DB có tên Facebook_DB để quản lý nhân viên trên toàn thế giới cho
+-- Facebook, với số lượng nhân viên lên đến hàng triệu người. Chúng ta sẽ quản lý về nhân viên
+-- (Staff), quản lý về đất nước của mỗi nhân viên, ngôn ngữ chính được sử dụng tại mỗi nước
+-- đó (National), và vị trí làm việc của nhân viên tại từng quốc gia (Office)
+-- National (National_id, National_Name, Language_Main)
+-- Office (Office_id, Street_Address, National_id)
+-- Staff (Staff_id, First_Name, Last_Name, Email, Office_id)
+
+/* -------------BÀI LÀM-------------- */
+
 DROP DATABASE IF EXISTS Facebook_DB;
 CREATE DATABASE Facebook_DB;
 USE Facebook_DB;
@@ -22,7 +34,7 @@ CREATE TABLE `Office`
 		Office_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         Street_Address VARCHAR(50) NOT NULL,
         National_id INT UNSIGNED,
-        FOREIGN KEY (National_id) REFERENCES `National`(National_id) ON DELETE CASCADE
+        FOREIGN KEY (National_id) REFERENCES `National`(National_id) 
 );
 
 -- DROP TABLE Staff
@@ -35,7 +47,7 @@ CREATE TABLE `Staff`
         Last_Name VARCHAR(50) NOT NULL,
         Email VARCHAR(50) NOT NULL UNIQUE,
         Office_id INT UNSIGNED,
-        FOREIGN KEY (Office_id) REFERENCES `Office`(Office_id) ON DELETE CASCADE
+        FOREIGN KEY (Office_id) REFERENCES `Office`(Office_id)
 );
 
 
@@ -95,6 +107,16 @@ VALUES
 	JOIN office O ON O.Office_id = s.Office_id
 	RIGHT JOIN `national` N ON O.National_id = n.National_id
 	WHERE o.National_id is null;
+    
+-- dung CTE tao bang
+	WITH cte_office AS
+    (
+			SELECT DISTINCT o.national_id FROM Office o
+            JOIN (SELECT DISTINCT s.office_id FROM staff s) t ON o.office_id = t.office_id
+	)
+    SELECT * from cte_office ct
+    RIGHT JOIN `national` n ON ct.National_id = n.National_id
+    WHERE ct.National_id IS NULL;
 
 -- Ques7: Thống kê xem trên thế giới có bao nhiêu quốc gia mà FB đang hoạt động sử dụng
 -- tiếng Anh làm ngôn ngữ chính.
@@ -131,6 +153,19 @@ VALUES
     
 	CALL sp_del_national('National 05');
 
+-- dap an
+	DROP PROCEDURE IF EXISTS SP_DelNation;
+	DELIMITER $$
+	CREATE PROCEDURE SP_DelNation(IN natonal_name VARCHAR(50))
+	BEGIN
+	DECLARE nation_id TINYINT;
+	SELECT n.National_id INTO nation_id FROM `national` n WHERE n.National_Name = natonal_name;
+	DELETE FROM staff s WHERE s.Office_id IN (SELECT o.Office_id FROM office o WHERE o.National_id = nation_id);
+	DELETE FROM office o WHERE o.National_id = nation_id;
+	DELETE FROM `national` n WHERE n.National_id = nation_id;
+	END $$
+	CALL SP_DelNation('Japan');
+
 -- Ques12: Mark muốn biết xem hiện tại đang có bao nhiêu nhân viên trên toàn thế giới đang
 -- làm việc cho anh ấy, hãy viết cho anh ấy 1 Function để a ấy có thể lấy dữ liệu này 1 cách
 -- nhanh chóng.
@@ -140,7 +175,7 @@ VALUES
 	CREATE FUNCTION fc_GetNumberOfStaff() RETURNS INT
 		BEGIN
 			DECLARE v_number INT;
-            SELECT count(staff_id) AS 'Number Of Staff' INTO v_number FROM staff;
+            SELECT count(1) AS 'Number Of Staff' INTO v_number FROM staff;
             RETURN v_number;
 		END$$
 	DELIMITER ;
@@ -151,11 +186,28 @@ VALUES
 -- tối đa 10.000 người. Bạn hãy tạo trigger cho table Staff chỉ cho phép insert mỗi quốc gia có
 -- tối đa 10.000 nhân viên giúp anh ấy (có thể cấu hình số lượng nhân viên nhỏ hơn vd 11 nhân
 -- viên để Test).
-	/* đếm số người thuộc mỗi quốc gia, hiền thị cả officeid */
-	SELECT o.Office_id,National_id, count(staff_id) FROM facebook_db.office o
-	join staff s on s.Office_id = o.Office_id
-	GROUP BY Office_id;
-
+	DROP TRIGGER IF EXISTS TrG_CheckToAddStaffToNational;
+	DELIMITER $$
+	CREATE TRIGGER TrG_CheckToAddStaffToNational
+	BEFORE INSERT ON `staff`
+	FOR EACH ROW
+		BEGIN
+			DECLARE National_id TINYINT;
+			DECLARE count_Staff TINYINT;
+			SELECT o.National_id INTO National_id FROM office o WHERE o.Office_id = NEW.Office_id;
+			SELECT count(1) INTO count_Staff FROM staff s
+			INNER JOIN office o ON o.Office_id = s.Office_id
+			INNER JOIN `national` n ON n.National_id = o.National_id
+			WHERE n.National_id= National_id;
+			IF (count_Staff >5) THEN
+			SIGNAL SQLSTATE '12345'
+			SET MESSAGE_TEXT = 'Cant add more Staff to this Country';
+		END IF;
+	END$$
+	DELIMITER ;
+    
+	INSERT INTO `staff` (`First_Name`, `Last_Name`, `Email`, `Office_id`)
+	VALUES ('FisrtName 12', 'LastName 12', 'Email12@gmail.com', '6');
 
 -- Ques14: Bạn hãy viết 1 Procedure để lấy ra tên trụ sở mà có số lượng nhân viên đang làm
 -- việc nhiều nhất.
@@ -205,30 +257,45 @@ VALUES
 	DELIMITER ;
 	
 	Call sp_GetStaffFromEmail('trantrungkien@gmail.com');
-
+    
+-- dap an 
+	SET GLOBAL log_bin_trust_function_creators = 1;
+	DROP FUNCTION IF EXISTS fc_getFullNameFromEmail;
+	DELIMITER $$
+	CREATE FUNCTION fc_getFullNameFromEmail(email VARCHAR(50)) RETURNS VARCHAR(100)
+	BEGIN
+	DECLARE fullName VARCHAR(100);
+	SELECT concat(s.First_Name,' ',s.Last_Name) INTO fullName FROM staff s WHERE s.Email =email;
+	RETURN fullName;
+	END $$
+    DELIMITER ;
+    
+	SELECT fc_getFullNameFromEmail('trantrungkien@gmail.com') AS FullName;
+    
 -- Ques16: Bạn hãy viết 1 Trigger để khi thực hiện cập nhật thông tin về trụ sở làm việc của
 -- nhân viên đó thì hệ thống sẽ tự động lưu lại trụ sở cũ của nhân viên vào 1 bảng khác có tên
 -- Log_Office để Mark có thể xem lại khi cần thiết.
+	DROP TABLE IF EXISTS Log_Office;
 	CREATE TABLE Log_Office
     (
-		Staff_id INT UNSIGNED,
-        First_Name VARCHAR(50) NOT NULL,
-        Last_Name VARCHAR(50) NOT NULL,
-        Email VARCHAR(50) NOT NULL,
-        Office_id INT UNSIGNED
+		Id SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+		Email VARCHAR(50) NOT NULL,
+		Office_id_Old SMALLINT UNSIGNED NOT NULL,
+		ChangeDate DATETIME
     );
     
     DROP TRIGGER IF EXISTS trig_af_change_office;
 	DELIMITER $$
-	CREATE TRIGGER trig_af_change_office
-    AFTER UPDATE ON  staff 
-    FOR EACH ROW
+	CREATE TRIGGER TrG_AfUpdateOfficeID
+	AFTER UPDATE ON `staff`
+	FOR EACH ROW
 	BEGIN
-        INSERT INTO Log_Office(Staff_id, First_Name, Last_Name, Email, Office_id) VALUE (OLD.Staff_id,OLD.First_Name,OLD.Last_Name,OLD.Email,NEW.office_id);
+		INSERT INTO `log_office` (`Email`, `Office_id_Old`, `ChangeDate`)
+		VALUES ( OLD.Email, OLD.Office_id,now());
 	END$$
 	DELIMITER ;
     
-    UPDATE `staff` SET office_id = '4' WHERE staff_id = '3';
+    UPDATE `staff` SET office_id = '1' WHERE staff_id = '6';
 
 -- Ques17: FB đang vướng vào 1 đạo luật hạn chế hoạt động, FB chỉ có thể hoạt động tối đa
 -- trên 100 quốc gia trên thế giới, hãy tạo Trigger để ngăn người nhập liệu nhập vào quốc gia

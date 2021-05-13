@@ -219,34 +219,87 @@
 	CALL sp_maxContentWithTypeID('Multiple-Choice');
 
 -- Question 9: Viết 1 store cho phép người dùng xóa exam dựa vào ID
-	DROP PROCEDURE IF EXISTS sp_del_examID;
-	DELIMITER $$
-	CREATE PROCEDURE sp_del_examID (IN in_ExamID TINYINT)
-		BEGIN
-			DELETE FROM Exam
-			WHERE in_ExamID = ExamID;
-		END$$
-	DELIMITER ;
+-- 	DROP PROCEDURE IF EXISTS sp_del_examID;
+-- 	DELIMITER $$
+-- 	CREATE PROCEDURE sp_del_examID (IN in_ExamID TINYINT)
+-- 		BEGIN
+-- 			DELETE FROM Exam
+-- 			WHERE in_ExamID = ExamID;
+-- 		END$$
+-- 	DELIMITER ;
 
-	CALL sp_del_examID(2);
+-- 	CALL sp_del_examID(2);
+
+-- dap an
+	DROP PROCEDURE IF EXISTS sp_DeleteExamWithID;
+	DELIMITER $$
+	CREATE PROCEDURE sp_DeleteExamWithID (IN in_ExamID TINYINT UNSIGNED)
+	BEGIN
+	DELETE FROM examquestion WHERE ExamID = in_ExamID;
+	DELETE FROM Exam WHERE ExamID = in_ExamID;
+	END$$
+	DELIMITER ;
+	CALL sp_DeleteExamWithID(7);
 
 -- Question 10: Tìm ra các exam được tạo từ 3 năm trước và xóa các exam đó đi (sử
 -- dụng store ở câu 9 để xóa) Sau đó in số lượng record đã remove từ các table liên quan trong khi removing???
-	DROP PROCEDURE IF EXISTS sp_del_exam_3Years;
-	DELIMITER $$
-	CREATE PROCEDURE sp_del_exam_3Years()
-		BEGIN
-			WITH CTE_EXAMID_3YEARS AS
-            (
-				SELECT ExamID FROM Exam
-                WHERE (Year(now()) - Year(CreateDate)) > 3
-            )
-            DELETE FROM Exam
-            WHERE ExamID = (SELECT *FROM CTE_EXAMID_3YEARS);
-		END$$
-	DELIMITER ;
+-- 	DROP PROCEDURE IF EXISTS sp_del_exam_3Years;
+-- 	DELIMITER $$
+-- 	CREATE PROCEDURE sp_del_exam_3Years()
+-- 		BEGIN
+-- 			WITH CTE_EXAMID_3YEARS AS
+--             (
+-- 				SELECT ExamID FROM Exam
+--                 WHERE (Year(now()) - Year(CreateDate)) > 3
+--             )
+--             DELETE FROM Exam
+--             WHERE ExamID = (SELECT *FROM CTE_EXAMID_3YEARS);
+-- 		END$$
+-- 	DELIMITER ;
 
-	CALL sp_del_exam_3Years();
+-- 	CALL sp_del_exam_3Years();
+
+
+-- dap an 
+	DROP PROCEDURE IF EXISTS SP_DeleteExamBefore3Year;
+	DELIMITER $$
+	CREATE PROCEDURE SP_DeleteExamBefore3Year()
+	BEGIN-- Khai báo biến sử dụng trong chương trình
+	DECLARE v_ExamID TINYINT UNSIGNED;
+	DECLARE v_CountExam TINYINT UNSIGNED DEFAULT 0;
+	DECLARE v_CountExamquestion TINYINT UNSIGNED DEFAULT 0;
+	DECLARE i TINYINT UNSIGNED DEFAULT 1;
+	DECLARE v_print_Del_info_Exam VARCHAR(50) ;
+	-- Tạo bảng tạm
+	DROP TABLE IF EXISTS ExamIDBefore3Year_Temp;
+	CREATE TABLE ExamIDBefore3Year_Temp
+			(
+			ID INT PRIMARY KEY AUTO_INCREMENT,
+			ExamID INT
+            );
+	-- Insert dữ liệu bảng tạm
+	INSERT INTO ExamIDBefore3Year_Temp(ExamID)
+	SELECT e.ExamID FROM exam e WHERE (year(now()) - year(e.CreateDate)) >2;
+	-- Lấy số lượng số Exam và ExamQuestion cần xóa.
+	SELECT count(1) INTO v_CountExam FROM ExamIDBefore3Year_Temp;
+	SELECT count(1) INTO v_CountExamquestion FROM examquestion ex
+	INNER JOIN ExamIDBefore3Year_Temp et ON ex.ExamID = et.ExamID;
+	-- Thực hiện xóa trên bảng Exam và ExamQuestion sử dụng Procedure đã tạo ở Question9 bên trên
+	WHILE (i <= v_CountExam) DO
+		SELECT ExamID INTO v_ExamID FROM ExamIDBefore3Year_Temp WHERE ID=i;
+		CALL sp_DeleteExamWithID(v_ExamID);
+		SET i = i +1;
+	END WHILE;
+	-- In câu thông báo
+	SELECT CONCAT("DELETE ",v_CountExam," rows IN Exam AND ", v_CountExamquestion ," rows IN ExamQuestion") INTO v_print_Del_info_Exam;
+	SIGNAL SQLSTATE '45000'
+	SET MESSAGE_TEXT = v_print_Del_info_Exam ;
+	-- Xóa bảng tạm sau khi hoàn thành
+	DROP TABLE IF EXISTS ExamIDBefore3Year_Temp;
+	END$$
+	DELIMITER ;
+	-- Run Procedure
+	Call SP_DeleteExamBefore3Year();
 
 -- Question 11: Viết store cho phép người dùng xóa phòng ban bằng cách người dùng
 -- nhập vào tên phòng ban và các account thuộc phòng ban đó sẽ được
@@ -329,7 +382,43 @@
     
 -- Question 13: Viết store để in ra mỗi tháng có bao nhiêu câu hỏi được tạo trong 6
 -- tháng gần đây nhất (Nếu tháng nào không có thì sẽ in ra là "không có câu hỏi nào trong tháng")
-	
+	DROP PROCEDURE IF EXISTS sp_CountQuesBefore6Month;
+	DELIMITER $$
+	CREATE PROCEDURE sp_CountQuesBefore6Month()
+	BEGIN
+	WITH CTE_Talbe_6MonthBefore AS (
+			SELECT MONTH(DATE_SUB(NOW(), INTERVAL 5 MONTH)) AS MONTH,
+			YEAR(DATE_SUB(NOW(), INTERVAL 5 MONTH)) AS `YEAR`
+			UNION
+			SELECT MONTH(DATE_SUB(NOW(), INTERVAL 4 MONTH)) AS MONTH,
+			YEAR(DATE_SUB(NOW(), INTERVAL 4 MONTH)) AS `YEAR`
+			UNION
+			SELECT MONTH(DATE_SUB(NOW(), INTERVAL 3 MONTH)) AS MONTH,
+			YEAR(DATE_SUB(NOW(), INTERVAL 3 MONTH)) AS `YEAR`
+			UNION
+			SELECT MONTH(DATE_SUB(NOW(), INTERVAL 2 MONTH)) AS MONTH,
+			YEAR(DATE_SUB(NOW(), INTERVAL 2 MONTH)) AS `YEAR`
+			UNION
+			SELECT MONTH(DATE_SUB(NOW(), INTERVAL 1 MONTH)) AS MONTH,
+			YEAR(DATE_SUB(NOW(), INTERVAL 1 MONTH)) AS `YEAR`
+			UNION
+			SELECT MONTH(NOW()) AS MONTH, YEAR(NOW()) AS `YEAR`
+			)
+	SELECT M.MONTH,M.YEAR, 
+		CASE
+		WHEN COUNT(QuestionID) = 0 THEN 'không có câu hỏi nào trong tháng'
+		ELSE COUNT(QuestionID)
+		END AS SL
+	FROM CTE_Talbe_6MonthBefore M
+	LEFT JOIN (SELECT * FROM question where CreateDate >= DATE_SUB(NOW(),INTERVAL 6 MONTH) AND CreateDate <= now())  AS Sub_Question 
+    ON M.MONTH = MONTH(CreateDate)
+	GROUP BY M.MONTH
+	ORDER BY M.MONTH ASC;
+	END$$
+	DELIMITER ;
+
+	-- Run:
+	CALL sp_CountQuesBefore6Month;
 
 
 

@@ -1,3 +1,16 @@
+-- Xây dựng DataBase Quản lý đồ án ĐHBKHN
+-- Để quản lý đồ án tốt nghiệp của các sinh viên, trường ĐHBKHN đang cần xây dựng 1 cơ sở
+-- dữ liệu MySQL để quản lý tập trung, bạn hãy giúp trường làm việc này. Hãy xây dựng 1 DB
+-- có tên QL_DoAn có các bảng dữ liệu như bên dưới (trường có dấu gạch chân là
+-- PrimaryKey):
+-- GiangVien(Id_GV, Ten_GV, Tuoi, HocVi)
+-- SinhVien(Id_SV, Tên_SV, NamSinh, QueQuan)
+-- DeTai(Id_DeTai, Ten_DeTai)
+-- HuongDan(Id, Id_SV, Id_DeTai, Id_GV, Diem)
+-- Trường học vị: nhận các giá trị là Ths, Ts, PGS, GS, ...
+
+	/*Bai 	lam*/
+
 DROP DATABASE IF EXISTS QL_DoAn;
 CREATE DATABASE QL_DoAn;
 USE QL_DoAn;
@@ -44,9 +57,9 @@ CREATE TABLE HuongDan
         ID_DeTai SMALLINT UNSIGNED,
         ID_GV TINYINT UNSIGNED,
         Diem TINYINT UNSIGNED,
-        FOREIGN KEY (ID_SV) REFERENCES SinhVien(ID_SV) ON DELETE CASCADE,
-        FOREIGN KEY (ID_DeTai) REFERENCES DeTai(ID_DeTai) ON DELETE CASCADE,
-        FOREIGN KEY (ID_GV) REFERENCES GiangVien(ID_GV) ON DELETE CASCADE
+        FOREIGN KEY (ID_SV) REFERENCES SinhVien(ID_SV) ,
+        FOREIGN KEY (ID_DeTai) REFERENCES DeTai(ID_DeTai),
+        FOREIGN KEY (ID_GV) REFERENCES GiangVien(ID_GV)
 );
 
 
@@ -114,9 +127,15 @@ VALUES
 -- (Nếu sinh viên chưa có đề tài thì column tên đề tài sẽ in ra "Chưa có")
 
 	CREATE OR REPLACE VIEW vw_SinhVienInfo AS
-    SELECT S.id_sv, s.ten_sv,d.ten_detai FROM `sinhvien` S
-    JOIN Huongdan H ON H.id_sv = s.id_sv
-    JOIN DeTai D ON D.id_detai = H.id_detai;
+		SELECT  s.ten_sv,d.ten_detai FROM `huongdan` h
+		JOIN sinhvien s ON s.id_sv = h.id_sv
+		JOIN DeTai d ON D.id_detai = H.id_detai
+        -- tao bang sv da co de tai
+		UNION 
+		SELECT  s.ten_sv,'Chua co' FROM `sinhvien` S
+		LEFT JOIN Huongdan H ON H.id_sv = s.id_sv
+        WHERE h.ID_SV IS NULL;
+        -- left join voi bang HD voi dk h.id_sv null
     
     SELECT *FROM vw_SinhVienInfo;
 
@@ -145,10 +164,11 @@ VALUES
 
 -- 5. Hãy cấu hình table sao cho khi xóa 1 sinh viên nào đó thì sẽ tất cả thông
 -- tin trong table HuongDan liên quan tới sinh viên đó sẽ bị xóa đi
-
--- them ON DELETE CASHCADE vao khoa ngoai
+	ALTER TABLE huongdan
+    DROP FOREIGN KEY huongdan_ibfk_1;
+    ALTER TABLE huongdan
+    ADD FOREIGN KEY (`ID_SV`) REFERENCES `sinhvien` (`ID_SV`) ON DELETE CASCADE;
 	
-
 -- 6. Viết 1 Procedure để khi nhập vào tên của sinh viên thì sẽ thực hiện xóa toàn bộ thông tin
 -- liên quan của sinh viên trên hệ thống:
 	
@@ -157,13 +177,13 @@ VALUES
 	CREATE PROCEDURE sp_del_sv(IN in_tenSV NVARCHAR(50))
 	BEGIN
 		WITH cte_idsv as
-		(SELECT ID_SV FROM ql_doan.sinhvien
-		WHERE Ten_SV = in_tenSV)
+			(SELECT ID_SV FROM ql_doan.sinhvien
+			WHERE Ten_SV = in_tenSV)
 		DELETE FROM huongdan WHERE id_sv = (SELECT *FROM cte_idsv);
         DELETE FROM sinhvien WHERE ten_sv = in_tenSV;
 	END$$
 	DELIMITER ;
 	
-	Call sp_del_sv('sinh vien 03');
+	Call sp_del_sv('sinh vien 03')
 
 
