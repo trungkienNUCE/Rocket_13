@@ -31,26 +31,33 @@ public class Exercise3_Date_Format {
 		exam03.duration = 120;
 		exam03.createDate = LocalDate.of(2021, 1, 1);
 
-//		Exam[] exams = {exam01, exam02, exam03};
-//		for (Exam exam : exams) {
-//			System.out.println(exam.id + exam.code + exam.title);
-//		}
-//		
-//		System.out.println(exam01.createDate);
-//		
-//		String date1 = new String();
-//		
-//		String pattern = "dd-MM-yyyy";
-//		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-//		
-//		String date = simpleDateFormat.format(exam01.createDate);
-//		System.out.println(date);
+//		Question 01
+//		Locale locale = new Locale("vn", "VN");
+//		DateFormat dateformat = DateFormat.getDateInstance(DateFormat.DEFAULT,locale);
+//		String date = dateformat.format(exam01.createDate);
+//		System.out.println(exam01.code + ": " + date);
 
-//		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-//		String date2 = (String) exam01.createDate;
-//
-//		String dateFormat = formatter.format(date2);
-//		System.out.println("Ngày đã được định dạng : " + dateFormat);
+//		Question 02
+//		String pattern = "dd-MM-yyyy HH:mm:ss";
+//		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+//		Exam[] exams = { exam01, exam02, exam03 };
+//		for (Exam exam : exams) {
+//			System.out.println("ID: " + exam.id + " " + "Code: " + " " +  exam.code + " " +  "Ngay tao:" + " " +  exam.createDate);
+//		}
+
+//		Question 03
+//		String pattern = "yyyy";
+//		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+//		Exam[] exams = { exam01, exam02, exam03 };
+//		for (Exam exam : exams) {
+//		String date = simpleDateFormat.format(exam.createDate);
+//		System.out.println(exam.code + ": " + date);
+//		}
+		
+//		Question 04 tuong tu cau 03
+		
+		
+//		Question 05 tuong tu
 
 	}
 }
