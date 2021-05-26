@@ -11,6 +11,7 @@ import com.vti.entity.Department;
 import com.vti.entity.Employee;
 import com.vti.entity.Engineer;
 import com.vti.entity.Group;
+import com.vti.entity.HighSchoolStudent;
 import com.vti.entity.Position;
 import com.vti.entity.Position.PositionName;
 import com.vti.entity.Staff;
@@ -212,5 +213,14 @@ public class Exercise5_Inheritance {
 			System.out.println("Nhập sai chức năng!");
 			break;
 		}
+	}
+
+	public void question3() {
+		HighSchoolStudent HSS = new HighSchoolStudent(1, "Kien", "Rocket13", "DHXD");
+		System.out.println(HSS.toString());
+		
+		
+		
+		
 	}
 }
