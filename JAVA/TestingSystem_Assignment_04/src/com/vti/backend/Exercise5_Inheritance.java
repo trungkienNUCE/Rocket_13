@@ -1,25 +1,33 @@
 package com.vti.backend;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Scanner;
 
 import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory.Default;
 import com.vti.entity.Account;
+import com.vti.entity.Book;
 import com.vti.entity.Department;
+import com.vti.entity.Doccument;
 import com.vti.entity.Employee;
 import com.vti.entity.Engineer;
 import com.vti.entity.Group;
 import com.vti.entity.HighSchoolStudent;
+import com.vti.entity.Magazine;
+import com.vti.entity.NewSpaper;
 import com.vti.entity.Position;
 import com.vti.entity.Position.PositionName;
 import com.vti.entity.Staff;
 import com.vti.entity.Worker;
 
 public class Exercise5_Inheritance {
-	ArrayList<Staff> staffList = new ArrayList<Staff>();
 	Scanner sc = new Scanner(System.in);
+	ArrayList<Staff> staffList = new ArrayList<Staff>();
+	ArrayList<Doccument> docList = new ArrayList<Doccument>();
 
 	public void question2() {
 		int choose;
@@ -218,9 +226,202 @@ public class Exercise5_Inheritance {
 	public void question3() {
 		HighSchoolStudent HSS = new HighSchoolStudent(1, "Kien", "Rocket13", "DHXD");
 		System.out.println(HSS.toString());
-		
-		
-		
-		
+	}
+
+	public void question4() {
+		int choose;
+		while (true) {
+			System.out.format("%n+-------------------------------------------------+%n");
+			System.out.println("=> Mời bạn chọn chức năng muốn sử dụng");
+			String leftAlign = "| %-46s  |%n";
+			System.out.format("+-------------------------------------------------+%n");
+			System.out.format("|		 Nhập chức năng			  |%n");
+			System.out.format("+-------------------------------------------------+%n");
+			System.out.format(leftAlign, "1. Thêm mới tài liệu");
+			System.out.format(leftAlign, "2. Xoá theo mã tài liệu");
+			System.out.format(leftAlign, "3. Hiển thị thông tin tài liệu");
+			System.out.format(leftAlign, "4. Tìm kiếm tài liệu theo loại");
+			System.out.format(leftAlign, "5. Thoát khỏi chương trình");
+			System.out.format("+-------------------------------------------------+%n");
+			choose = sc.nextInt();
+			switch (choose) {
+			case 1:
+				addDoc();
+				break;
+			case 2:
+				delDoc();
+				break;
+			case 3:
+				printDoc();
+				break;
+			case 4:
+				searchDoc();
+				break;
+			case 5:
+				System.out.println("Bạn có muốn tiếp tục không?");
+				System.out.println("1 - để tiếp tục, Nhập bất kỳ để thoát");
+				String tt1 = sc.next();
+				if (tt1.equals("1")) {
+					System.out.println("Nhập lại chức năng");
+					break;
+				} else {
+					System.out.println("Good Bye!");
+					return;
+				}
+			default:
+				System.out.println("Nhập lại");
+				break;
+			}
+		}
+
+	}
+
+	private void searchDoc() {
+		System.out.println("Tìm kiếm tài liệu theo thể loại (1.Báo 2.Tạp chí 3.Sách)");
+		int input = sc.nextInt();
+		String searchName = "";
+		switch (input) {
+		case 1:
+			searchName = "NewSpaper";
+			for (Doccument doccument : docList) {
+				if (doccument.toString().contains(searchName)) {
+					System.out.println(doccument.toString());
+				}
+			}
+			System.out.println();
+			break;
+		case 2:
+			searchName = "Magazine";
+			for (Doccument doccument : docList) {
+				if (doccument.toString().contains(searchName)) {
+					System.out.println(doccument.toString());
+				}
+			}
+			System.out.println();
+			break;
+		case 3:
+			searchName = "Book";
+			for (Doccument doccument : docList) {
+				if (doccument.toString().contains(searchName)) {
+					System.out.println(doccument.toString());
+				}
+			}
+			System.out.println();
+			break;
+		default:
+			break;
+		}
+	}
+	private void delDoc() {
+		System.out.println("Nhập ID tài liệu cần xoá: ");
+		int delID = sc.nextInt();
+		docList.removeIf(doccument -> doccument.getId() == delID);
+		System.out.println("Danh sách tài liệu còn lại là: ");
+		for (Doccument doccument : docList) {
+			System.out.println(doccument.toString());
+		}
+
+	}
+
+	private void printDoc() {
+		System.out.println("Danh sách tài liệu có trên hệ thống");
+		for (Doccument doccument : docList) {
+			System.out.println(doccument.toString());
+		}
+	}
+
+	private void addDoc() {
+		String leftAlign = "| %-46s  |%n";
+		System.out.format("+-------------------------------------------------+%n");
+		System.out.format(leftAlign, "1. Thêm mới báo");
+		System.out.format(leftAlign, "2. Thêm mới tạp chí");
+		System.out.format(leftAlign, "3. Thêm mới sách");
+		System.out.format("+-------------------------------------------------+%n");
+		int choose1 = sc.nextInt();
+		switch (choose1) {
+		case 1:
+			System.out.println("-----Thêm mới báo-----");
+			System.out.println("ID:");
+			int id = sc.nextInt();
+
+			System.out.println("Nhà xuất bản:");
+			String producer = sc.next();
+
+			System.out.println("Số bản phát hành:");
+			int releaseNumber = sc.nextInt();
+
+			System.out.print("Nhập ngày phát hành theo định dạng (dd/MM/yyyy): ");
+			String dayOfRelease = sc.next();
+
+//			SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+//			df.setLenient(false); // set false để kiểm tra tính hợp lệ của date. VD: tháng 2 phải có 28-29 ngày,
+//									// năm có 12 tháng,....
+//			try {
+//				df.parse(dayOfRelease); // parse dateString thành kiểu Date
+//			} catch (ParseException e) { // quăng lỗi nếu dateString ko hợp lệ
+//				System.out.println("Loi dinh dang ngay");
+//			}
+
+//			them sach vao danh sach arraylist
+			Doccument newspaper = new NewSpaper(id, producer, releaseNumber, dayOfRelease);
+			docList.add(newspaper);
+//			System.out.println(newspaper.toString());
+			break;
+		case 2:
+			System.out.println("-----Thêm mới tạp chí-----");
+			System.out.println("ID:");
+			int id2 = sc.nextInt();
+
+			System.out.println("Nhà xuất bản:");
+			String producer2 = sc.next();
+
+			System.out.println("Số bản phát hành:");
+			int releaseNumber2 = sc.nextInt();
+
+			System.out.println("Số phát hành:");
+			int idRelease = sc.nextInt();
+
+			System.out.print("Nhập tháng phát hành theo định dạng (dd/MM/yyyy): ");
+			String monthOfRelease = sc.next();
+
+//			SimpleDateFormat df2 = new SimpleDateFormat("dd/MM/yyyy");
+//			df2.setLenient(false); // set false để kiểm tra tính hợp lệ của date. VD: tháng 2 phải có 28-29 ngày,
+//									// năm có 12 tháng,....
+//			try {
+//				df2.parse(monthOfRelease); // parse dateString thành kiểu Date
+//			} catch (ParseException e) { // quăng lỗi nếu dateString ko hợp lệ
+//				System.out.println("Loi dinh dang ngay");
+//			}
+//			them tap chi vao danh sach arraylist
+			Doccument magazine = new Magazine(id2, producer2, releaseNumber2, idRelease, monthOfRelease);
+			docList.add(magazine);
+//			System.out.println(magazine.toString());
+			break;
+		case 3:
+			System.out.println("-----Thêm mới sách-----");
+			System.out.println("ID:");
+			int id3 = sc.nextInt();
+
+			System.out.println("Nhà xuất bản:");
+			String producer3 = sc.next();
+
+			System.out.println("Số bản phát hành:");
+			int releaseNumber3 = sc.nextInt();
+
+			System.out.println("Tác giả:");
+			String author = sc.next();
+
+			System.out.println("Số trang:");
+			int numberOfPage = sc.nextInt();
+
+//			them sach vao danh sach arraylist
+			Doccument book = new Book(id3, producer3, releaseNumber3, author, numberOfPage);
+			docList.add(book);
+			System.out.println(book.toString());
+			break;
+		default:
+//			System.out.println("Nhập sai chức năng!");
+			break;
+		}
 	}
 }

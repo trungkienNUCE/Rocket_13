@@ -10,7 +10,8 @@ public class Program5 {
 	public static void main(String[] args) {
 		Exercise5_Inheritance ex05 = new Exercise5_Inheritance();
 //		ex05.question2();
-		ex05.question3();
+//		ex05.question3();
+		ex05.question4();
 	}
 
 }
