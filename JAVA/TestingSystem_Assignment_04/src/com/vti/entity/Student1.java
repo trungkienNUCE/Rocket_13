@@ -1,6 +1,6 @@
 package com.vti.entity;
 
-public abstract class Student1 extends Person implements IFamily, IRelax, IStudy{
+public abstract class Student1 extends Person{
 	private int id;
 
 	public Student1(int id, String name) {
