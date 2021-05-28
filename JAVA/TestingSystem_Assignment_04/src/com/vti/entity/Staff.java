@@ -10,7 +10,7 @@ public class Staff {
 	
 	@Override
 	public String toString() {
-		return "Staff [name=" + name + ", age=" + age + ", gender=" + gender + ", address=" + address + "]";
+		return "Cán bộ [Tên: " + name + ", Tuổi: " + age + ", Giới tính: " + gender + ", Địa chỉ: " + address + ",";
 	}
 	public Staff(String name, int age, Gender gender, String address) {
 		super();

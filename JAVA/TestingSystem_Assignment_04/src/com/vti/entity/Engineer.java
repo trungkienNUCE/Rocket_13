@@ -7,7 +7,7 @@ public class Engineer extends Staff {
 
 	@Override
 	public String toString() {
-		return super.toString() + " specialized=" + specialized;
+		return super.toString() + " Chuyên ngành: " + specialized + "]";
 	}
 
 	public Engineer(String name, int age, Gender gender, String address, String specialized) {

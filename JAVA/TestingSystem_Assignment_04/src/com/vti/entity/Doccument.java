@@ -14,7 +14,7 @@ public class Doccument {
 	}
 	@Override
 	public String toString() {
-		return "Doccument [id=" + id + ", producer=" + producer + ", releaseNumber=" + releaseNumber + "]";
+		return "Tài liệu [Mã tài liệu: " + id + ", Nhà sản xuất=" + producer + ", Số phát hành: " + releaseNumber + ", ";
 	}
 	public int getId() {
 		return id;

@@ -12,7 +12,7 @@ public class NewSpaper extends Doccument {
 
 	@Override
 	public String toString() {
-		return super.toString() + "NewSpaper [dayOfRelease=" + dayOfRelease + "]";
+		return super.toString() + "Thể loại: Báo - Ngày phát hành: " + dayOfRelease + "]";
 	}
 
 	public String getDayOfRelease() {

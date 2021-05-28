@@ -25,11 +25,16 @@ import com.vti.entity.Staff;
 import com.vti.entity.Worker;
 
 public class Exercise5_Inheritance {
+	public static int ID = 0;
 	Scanner sc = new Scanner(System.in);
 	ArrayList<Staff> staffList = new ArrayList<Staff>();
 	ArrayList<Doccument> docList = new ArrayList<Doccument>();
 
 	public void question2() {
+		menuQuestion1_2();
+	}
+
+	private void menuQuestion1_2() {
 		int choose;
 		while (true) {
 			System.out.format("%n+-------------------------------------------------+%n");
@@ -74,6 +79,7 @@ public class Exercise5_Inheritance {
 				break;
 			}
 		}
+		
 	}
 
 	private void delete() {
@@ -229,6 +235,10 @@ public class Exercise5_Inheritance {
 	}
 
 	public void question4() {
+		menuQuestion4();
+	}
+
+	private void menuQuestion4() {
 		int choose;
 		while (true) {
 			System.out.format("%n+-------------------------------------------------+%n");
@@ -279,39 +289,33 @@ public class Exercise5_Inheritance {
 	private void searchDoc() {
 		System.out.println("Tìm kiếm tài liệu theo thể loại (1.Báo 2.Tạp chí 3.Sách)");
 		int input = sc.nextInt();
-		String searchName = "";
 		switch (input) {
 		case 1:
-			searchName = "NewSpaper";
 			for (Doccument doccument : docList) {
-				if (doccument.toString().contains(searchName)) {
+				if (doccument instanceof NewSpaper) {
 					System.out.println(doccument.toString());
 				}
 			}
-			System.out.println();
 			break;
 		case 2:
-			searchName = "Magazine";
 			for (Doccument doccument : docList) {
-				if (doccument.toString().contains(searchName)) {
+				if (doccument instanceof Magazine) {
 					System.out.println(doccument.toString());
 				}
 			}
-			System.out.println();
 			break;
 		case 3:
-			searchName = "Book";
 			for (Doccument doccument : docList) {
-				if (doccument.toString().contains(searchName)) {
+				if (doccument instanceof Book) {
 					System.out.println(doccument.toString());
 				}
 			}
-			System.out.println();
 			break;
 		default:
 			break;
 		}
 	}
+
 	private void delDoc() {
 		System.out.println("Nhập ID tài liệu cần xoá: ");
 		int delID = sc.nextInt();
@@ -341,8 +345,6 @@ public class Exercise5_Inheritance {
 		switch (choose1) {
 		case 1:
 			System.out.println("-----Thêm mới báo-----");
-			System.out.println("ID:");
-			int id = sc.nextInt();
 
 			System.out.println("Nhà xuất bản:");
 			String producer = sc.next();
@@ -352,6 +354,7 @@ public class Exercise5_Inheritance {
 
 			System.out.print("Nhập ngày phát hành theo định dạng (dd/MM/yyyy): ");
 			String dayOfRelease = sc.next();
+			ID++;
 
 //			SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 //			df.setLenient(false); // set false để kiểm tra tính hợp lệ của date. VD: tháng 2 phải có 28-29 ngày,
@@ -363,14 +366,12 @@ public class Exercise5_Inheritance {
 //			}
 
 //			them sach vao danh sach arraylist
-			Doccument newspaper = new NewSpaper(id, producer, releaseNumber, dayOfRelease);
+			Doccument newspaper = new NewSpaper(ID, producer, releaseNumber, dayOfRelease);
 			docList.add(newspaper);
 //			System.out.println(newspaper.toString());
 			break;
 		case 2:
 			System.out.println("-----Thêm mới tạp chí-----");
-			System.out.println("ID:");
-			int id2 = sc.nextInt();
 
 			System.out.println("Nhà xuất bản:");
 			String producer2 = sc.next();
@@ -381,8 +382,9 @@ public class Exercise5_Inheritance {
 			System.out.println("Số phát hành:");
 			int idRelease = sc.nextInt();
 
-			System.out.print("Nhập tháng phát hành theo định dạng (dd/MM/yyyy): ");
+			System.out.print("Tháng phát hành: ");
 			String monthOfRelease = sc.next();
+			ID++;
 
 //			SimpleDateFormat df2 = new SimpleDateFormat("dd/MM/yyyy");
 //			df2.setLenient(false); // set false để kiểm tra tính hợp lệ của date. VD: tháng 2 phải có 28-29 ngày,
@@ -393,14 +395,12 @@ public class Exercise5_Inheritance {
 //				System.out.println("Loi dinh dang ngay");
 //			}
 //			them tap chi vao danh sach arraylist
-			Doccument magazine = new Magazine(id2, producer2, releaseNumber2, idRelease, monthOfRelease);
+			Doccument magazine = new Magazine(ID, producer2, releaseNumber2, idRelease, monthOfRelease);
 			docList.add(magazine);
 //			System.out.println(magazine.toString());
 			break;
 		case 3:
 			System.out.println("-----Thêm mới sách-----");
-			System.out.println("ID:");
-			int id3 = sc.nextInt();
 
 			System.out.println("Nhà xuất bản:");
 			String producer3 = sc.next();
@@ -414,8 +414,9 @@ public class Exercise5_Inheritance {
 			System.out.println("Số trang:");
 			int numberOfPage = sc.nextInt();
 
+			ID++;
 //			them sach vao danh sach arraylist
-			Doccument book = new Book(id3, producer3, releaseNumber3, author, numberOfPage);
+			Doccument book = new Book(ID, producer3, releaseNumber3, author, numberOfPage);
 			docList.add(book);
 			System.out.println(book.toString());
 			break;

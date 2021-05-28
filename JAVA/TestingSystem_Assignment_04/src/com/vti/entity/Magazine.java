@@ -12,7 +12,7 @@ public class Magazine extends Doccument{
 	}
 	@Override
 	public String toString() {
-		return super.toString() + "Magazine [idRelease=" + idRelease + ", monthOfRelease=" + monthOfRelease + "]";
+		return super.toString() + "Thể loại: Tạp chí - Số lượng phát hành: " + idRelease + ", Tháng phát hành: " + monthOfRelease + "]";
 	}
 	public int getIdRelease() {
 		return idRelease;

@@ -11,7 +11,7 @@ public class Worker extends Staff {
 	}
 	@Override
 	public String toString() {
-		return super.toString() + " rank=" + rank ;
+		return super.toString() + " Cấp bậc: " + rank + "]";
 	}
 
 	

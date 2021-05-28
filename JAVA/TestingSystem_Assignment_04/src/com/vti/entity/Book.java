@@ -12,7 +12,7 @@ public class Book extends Doccument{
 
 	@Override
 	public String toString() {
-		return super.toString() + "Book [author=" + author + ", numberOfPage=" + numberOfPage + "]";
+		return super.toString() + "Thể loại: Sách - Tác giả: " + author + ", Số trang: " + numberOfPage + "]";
 	}
 
 	public String getAuthor() {
