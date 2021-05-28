@@ -3,6 +3,9 @@ package com.vti.backend;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import com.vti.entity.AccountQ2_Ex4;
+import com.vti.entity.Circle;
+import com.vti.entity.Date;
 import com.vti.entity.Staff;
 import com.vti.entity.Student;
 import com.vti.entity.Worker;
@@ -98,8 +101,40 @@ public class Exercise4_Encapsulation {
 		studentList.add(student);
 
 		System.out.println("Thông tin sinh viên vừa thêm là: ");
-		System.out.println("ID: " + student.getId() + " , Tên: " + student.getName() + " , Hometown: " + student.getHometown()
-				+ " , Điểm: " + student.getPoint());
+		System.out.println("ID: " + student.getId() + " , Tên: " + student.getName() + " , Hometown: "
+				+ student.getHometown() + " , Điểm: " + student.getPoint());
 	}
 
+	public void question2() {
+		System.out.println("---Demo Circle ----");
+		Circle circle = new Circle(2.0, "red");
+		System.out.println("Diện tích hình tròn là: " + circle.getArea());
+
+		System.out.println("---- Demo AccountQues2 -----");
+		AccountQ2_Ex4 accQues1 = new AccountQ2_Ex4("1", "accQues1", 30);
+		AccountQ2_Ex4 accQues2 = new AccountQ2_Ex4("2", "accQues2", 50);
+		System.out.println(
+				"Số tiền ban đầu của: accQues1: " + accQues1.getBalance() + " accQues2: " + accQues2.getBalance());
+
+		accQues1.credit(50);
+		System.out.println("Balace của accQues1 sau khi Credit 50: " + accQues1.getBalance());
+
+		accQues1.debit(20);
+		System.out.println("Balace của accQues1 sau khi debit 20: " + accQues1.getBalance());
+
+		System.out.println("accQues1 chuyển 20 cho accQues2: ");
+		accQues1.tranferTo(accQues2, 20);
+		System.out.println("Sau khi chuyển số tiền của accQues1: " + accQues1.getBalance() + " accQues2: "
+				+ accQues2.getBalance());
+
+		System.out.println("---- Demo Date -----");
+		Date date1 = new Date(25, 04, 1988);
+		System.out.println("Bạn vừa tạo ngày: " + date1);
+		System.out.println("Check năm nhuận: ");
+		if (date1.isLeapYear()) {
+			System.out.println("Đây là năm nhuận");
+		} else {
+			System.out.println("Đây không phải là năm nhuận");
+		}
+	}
 }

@@ -42,21 +42,19 @@ public class Date {
 	}
 
 	public boolean isLeapYear() {
-//		ĐIỀU KIỆN NĂM NHUẬN LÀ NĂM CHIA HẾT CHO 100 VÀ CHIA HẾT CHO 4
-		return getYear() % 100 == 0 && getYear() % 4 == 0 ? true : false;
-
-		
-//		if (getYear() % 100 == 0) {
-//			if (getYear() % 400 == 0) {
-//				System.out.println(" la nam nhuan");
-//			} else {
-//				System.out.println(" khong phai la nam nhuan");
-//			}
-//		} else if (getYear() % 4 == 0) {
-//			System.out.println(" la nam nhuan");
-//		} else {
-//			System.out.println(" khong phai la nam nhuan");
-//		}
+		if (year % 4 == 0) // chia hết cho 4 là năm nhuận
+		{
+			if (year % 100 == 0)
+			// nếu vừa chia hết cho 4 mà vừa chia hết cho 100 thì k phải là năm nhuận
+			{
+				if (year % 400 == 0)// chia hết cho 400 là năm nhuận
+					return true;
+				else
+					return false;// không chia hết cho 400 thì không phải năm nhuận
+			} else// chia hết cho 4 nhưng không chia hết cho 100 là năm nhuận
+				return true;
+		} else {
+			return false;
+		}
 	}
-
 }
