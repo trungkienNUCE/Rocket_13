@@ -1,5 +1,6 @@
 package com.vti.frontend;
 
+import com.vti.backend.Ex2_question2;
 import com.vti.backend.Ex2_question4;
 import com.vti.backend.Exercise2_Polymorphism;
 
@@ -15,8 +16,11 @@ public class Program2 {
 ////		nhom 2 di don ve sinh
 //		ex2.question1d();
 		
-		Ex2_question4 ex2_ques4 = new Ex2_question4();
-		ex2_ques4.tinhTong();
+//		Ex2_question4 ex2_ques4 = new Ex2_question4();
+//		ex2_ques4.tinhTong();
+		
+		Ex2_question2 ex2_ques2 = new Ex2_question2();
+		ex2_ques2.question2();
 	}
 
 }
