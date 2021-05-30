@@ -1,8 +1,10 @@
 package com.vti.ultis;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Scanner;
 
-public class ScannerUtils {
+public class ScannerUltis {
 	private static Scanner scanner = new Scanner(System.in);
 
 //	cau 7
@@ -11,7 +13,17 @@ public class ScannerUtils {
 			try {
 				return Integer.parseInt(scanner.nextLine().trim());
 			} catch (Exception e) {
-				System.err.print("Nhập lại: ");
+				System.err.print(errorMessage);
+			}
+		}
+	}
+	
+	public static int inputInt() {
+		while (true) {
+			try {
+				return Integer.parseInt(scanner.nextLine().trim());
+			} catch (Exception e) {
+				System.err.print("Nhap lai: ");
 			}
 		}
 	}
@@ -37,13 +49,24 @@ public class ScannerUtils {
 		}
 	}
 
-	public static String inputString(String errorMessage) {
+	public static String inputString(String string) {
 		while (true) {
-			String input = scanner.nextLine().trim();
+			String input = scanner.next().trim();
 			if (!input.isEmpty()) {
 				return input;
 			} else {
-				System.err.println(errorMessage);
+				System.err.println("Nhập lại: ");
+			}
+		}
+	}
+
+	public static String inputString() {
+		while (true) {
+			String input = scanner.next().trim();
+			if (!input.isEmpty()) {
+				return input;
+			} else {
+				System.err.println("Nhập lại: ");
 			}
 		}
 	}
@@ -96,6 +119,21 @@ public class ScannerUtils {
 		}
 	}
 
+	public static int inputIntPositive() {
+		while (true) {
+			try {
+				int intPositive = Integer.parseInt(scanner.next());
+				if (intPositive >= 0) {
+					return intPositive;
+				} else {
+					System.err.println("Nhập lại:");
+				}
+			} catch (Exception e) {
+				System.err.println("Nhập lại:");
+			}
+		}
+	}
+
 	public static int inputAgeGreaterThan18() {
 		while (true) {
 			int age = inputAge();
@@ -105,6 +143,22 @@ public class ScannerUtils {
 
 			} else {
 				System.out.println("Wrong inputing! The age must be greater than 18, please input again.");
+			}
+		}
+	}
+
+	public static LocalDate inputLocalDate() {
+		System.out.println("Nhập theo định dạng yyyy-MM-dd");
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		while (true) {
+			String localdate = scanner.next().trim();
+			try {
+				if (format.parse(localdate) != null) {
+					LocalDate lc = LocalDate.parse(localdate);
+					return lc;
+				}
+			} catch (Exception e) {
+				System.err.println("Nhập lại:");
 			}
 		}
 	}
