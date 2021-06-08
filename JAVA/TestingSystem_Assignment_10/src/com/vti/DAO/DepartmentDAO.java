@@ -75,19 +75,20 @@ public class DepartmentDAO {
 			return false;
 		}
 	}
-//	public Boolean isDepartmentIdExists(int id) throws ClassNotFoundException, SQLException {
-//		String sql = "Select * from Department WHERE DepartmentID = ?";
-//		PreparedStatement preStatement = jdbc.createPrepareStatement(sql);
-//		preStatement.setInt(1, id);
-//		ResultSet resultSet = preStatement.executeQuery();
-//		if (resultSet.next()) {
-//			jdbc.disConnection();
-//			return true;
-//		} else {
-//			return false;
-//
-//		}
-//	}
+
+	public Boolean isDepartmentIdExists(int id) throws ClassNotFoundException, SQLException {
+		String sql = "Select * from Department WHERE DepartmentID = ?";
+		PreparedStatement preStatement = jdbc.createPrepareStatement(sql);
+		preStatement.setInt(1, id);
+		ResultSet resultSet = preStatement.executeQuery();
+		if (resultSet.next()) {
+			jdbc.disConnection();
+			return true;
+		} else {
+			return false;
+
+		}
+	}
 
 	public boolean updateDepartmentName(int id, String name) throws ClassNotFoundException, SQLException {
 		Department depID = getDepartmentById(id);
@@ -131,5 +132,24 @@ public class DepartmentDAO {
 		}
 
 	}
+
+//	public boolean isDepartmentIdExists(int id) throws SQLException, IOException, ClassNotFoundException {
+//
+//		String sql = "SELECT * FROM Department WHERE DepartmentID = ?";
+//		PreparedStatement preStatement = jdbc.createPrepareStatement(sql);
+//
+//		preStatement.setInt(1, id);
+//
+//		ResultSet resultSet = preStatement.executeQuery();
+//
+//		if (resultSet.next()) {
+//			jdbc.disConnection();
+//			return true;
+//
+//		} else {
+//			jdbc.disConnection();
+//			return false;
+//		}
+//	}
 
 }
