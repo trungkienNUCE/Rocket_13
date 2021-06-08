@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Scanner;
 
 import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory.Default;
 import com.vti.ultis.ScannerUltis;
@@ -14,9 +15,57 @@ import com.vti.ultis.jdbcUltis;
 
 public class Exercise1 {
 	private jdbcUltis jdbc;
-
-	public Exercise1() throws FileNotFoundException, IOException {
+	Scanner sc = new Scanner(System.in);
+	public Exercise1() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
 		jdbc = new jdbcUltis();
+		menu();
+	}
+
+	private void menu() throws ClassNotFoundException, SQLException {
+		int choose;
+		while (true) {
+			System.out.format("%n+-------------------------------------------------+%n");
+			System.out.println("=> Mời bạn chọn chức năng muốn sử dụng");
+			String leftAlign = "| %-46s  |%n";
+			System.out.format("+-------------------------------------------------+%n");
+			System.out.format("|		 Nhập chức năng			  |%n");
+			System.out.format("+-------------------------------------------------+%n");
+			System.out.format(leftAlign, "1. In ra các Position");
+			System.out.format(leftAlign, "2. Thêm mới Position");
+			System.out.format(leftAlign, "3. Update Position có ID = 5");
+			System.out.format(leftAlign, "4. Xoá 1 Position");
+			System.out.format(leftAlign, "5. Thoát khỏi chương trình");
+			System.out.format("+-------------------------------------------------+%n");
+			choose = ScannerUltis.inputFunction(1, 5, "Nhập lại");
+			switch (choose) {
+			case 1:
+				question2();
+				break;
+			case 2:
+				question3();
+				break;
+			case 3:
+				question4();
+				break;
+			case 4:
+				question5();
+				break;
+			case 5:
+				System.out.println("Bạn có muốn tiếp tục không?");
+				System.out.println("1 - để tiếp tục, Nhập bất kỳ để thoát");
+				String tt1 = sc.next();
+				if (tt1.equals("1")) {
+					System.out.println("Nhập lại chức năng");
+					break;
+				} else {
+					System.out.println("Good Bye!");
+					return;
+				}
+			default:
+				System.out.println("Nhập lại");
+				break;
+			}
+		}
 	}
 
 	public void question1() throws ClassNotFoundException, SQLException {

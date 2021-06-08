@@ -1,4 +1,4 @@
-package com.vit.DAO;
+package com.vti.DAO;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

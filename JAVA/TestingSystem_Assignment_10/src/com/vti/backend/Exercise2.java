@@ -4,16 +4,78 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Scanner;
 
-import com.vit.DAO.DepartmentDAO;
+import com.vti.DAO.DepartmentDAO;
 import com.vti.entity.Department;
 import com.vti.ultis.ScannerUltis;
 
 public class Exercise2 {
 	private DepartmentDAO depDAO;
-
-	public Exercise2() throws FileNotFoundException, IOException {
+	Scanner sc = new Scanner(System.in);
+	
+	public Exercise2() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
 		depDAO = new DepartmentDAO();
+		menu();
+	}
+
+	private void menu() throws ClassNotFoundException, SQLException {
+		int choose;
+		while (true) {
+			System.out.format("%n+-------------------------------------------------+%n");
+			System.out.println("=> Mời bạn chọn chức năng muốn sử dụng");
+			String leftAlign = "| %-46s  |%n";
+			System.out.format("+-------------------------------------------------+%n");
+			System.out.format("|		 Nhập chức năng			  |%n");
+			System.out.format("+-------------------------------------------------+%n");
+			System.out.format(leftAlign, "1. In ra các Department");
+			System.out.format(leftAlign, "2. Thông tin Department có ID = 5");
+			System.out.format(leftAlign, "3. Thông tin Department có ID = ");
+			System.out.format(leftAlign, "4. Kiểm tra tên Department có tổn tại không?");
+			System.out.format(leftAlign, "5. Tạo 1 Department mới");
+			System.out.format(leftAlign, "6. Update Department");
+			System.out.format(leftAlign, "7. Xoá Department");
+			System.out.format(leftAlign, "8. Thoát khỏi chương trình");
+			System.out.format("+-------------------------------------------------+%n");
+			choose = ScannerUltis.inputFunction(1, 8, "Nhập lại");
+			switch (choose) {
+			case 1:
+				question1();
+				break;
+			case 2:
+				question2();
+				break;
+			case 3:
+				question3();
+				break;
+			case 4:
+				question4();
+				break;
+			case 5:
+				question5();
+				break;
+			case 6:
+				question6();
+				break;
+			case 7:
+				question7();
+				break;
+			case 8:
+				System.out.println("Bạn có muốn tiếp tục không?");
+				System.out.println("1 - để tiếp tục, Nhập bất kỳ để thoát");
+				String tt1 = sc.next();
+				if (tt1.equals("1")) {
+					System.out.println("Nhập lại chức năng");
+					break;
+				} else {
+					System.out.println("Good Bye!");
+					return;
+				}
+			default:
+				System.out.println("Nhập lại");
+				break;
+			}
+		}		
 	}
 
 	public void question1() throws ClassNotFoundException, SQLException {

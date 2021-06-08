@@ -6,23 +6,14 @@ import java.sql.SQLException;
 
 import com.vti.backend.Exercise1;
 import com.vti.backend.Exercise2;
+import com.vti.backend.Exercise2_q8;
 
 public class Program1 {
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, FileNotFoundException, IOException {
-		Exercise1 ex1 = new Exercise1();
-		ex1.question1();
-//		ex1.question2();
-//		ex1.question3();
-//		ex1.question4();
-//		ex1.question5();
+//		Exercise1 ex1 = new Exercise1();
 		
-		Exercise2 ex2 = new Exercise2();
-		ex2.question1();
-//		ex2.question2();
-//		ex2.question3();
-//		ex2.question4();
-//		ex2.question5();
-//		ex2.question6();
-//		ex2.question7();
+//		Exercise2 ex2 = new Exercise2();
+		
+		Exercise2_q8 ex2_q8 = new Exercise2_q8();
 	}
 }
